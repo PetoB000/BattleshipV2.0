@@ -1,6 +1,7 @@
 import time
 import os
 import string
+import sys
 
 
 def clear():
@@ -111,7 +112,7 @@ def get_shoot():
 
 
 def battleship_main():
-    start_menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
+    menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
     board = init_board(size=5)      # pálya létrehozása              
     display_board(board)       # pálya megjelenítése    > Marci
     placement_phase(board, size=5)
@@ -162,12 +163,11 @@ while True:
     if input == 1:
         display_board(board)
     if input == 2:
-        os.exit
+        sys.exit()
         print("Please choose a number from the menu!\n\n")
         continue
     break
 
-menu()
 
 
 if __name__ == "__main__":
