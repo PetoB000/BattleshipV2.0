@@ -1,10 +1,20 @@
+import string
+
+
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
 
 
-
-
+def display_board(board):
+    abc_letters_up = string.ascii_uppercase
+    for number in range(len(board)+1):
+        print(' ' if number == 0 else number, end=' ')
+    print('')
+    for row in range(len(board)+1):
+        for col in range(len(board)+1):
+            print(abc_letters_up[row] if col == 0 else 'O', end=' ')
+        print('')
 
 
 def battleship_main():
