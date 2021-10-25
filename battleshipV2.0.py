@@ -25,6 +25,12 @@ def validate_coordinates(size):
 
     return validate_letters_numbers
 
+def get_shoot():
+    move = input("Give a coordinate:")
+    valid = validate_coordinates()
+    if valid == True:
+        row, col = move[0], move[1]
+        return row, col
 
 def battleship_main():
     # start menu()       5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
