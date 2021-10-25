@@ -71,7 +71,7 @@ import string
 #         for col in range(len(board)+1):
 #             print(abc_letters_up[row] if col == 0 else 'O', end=' ')
 #         print('')
-size = 5
+size = 4
 
 def get_valid_moves(size):
     abc_letters = string.ascii_uppercase
@@ -81,15 +81,16 @@ def get_valid_moves(size):
     valid_numbers = []
     for number in range(size):
         valid_numbers.append(str(number+1))
-    valid_moves = []
+    valid_letters_and_numbers = []
     for letter in range(size):
         for number in range(size):
-            valid_moves.extend([abc_letters[letter],str((number+1))])
-    valid_moves_with_tuples = []
-    for i in range(0,len(valid_moves),2):
-        valid_moves_with_tuples.append((valid_moves[i],valid_moves[i+1]))
+            valid_letters_and_numbers.extend([abc_letters[letter],str((number+1))])
+    valid_moves = []
+    for i in range(0,len(valid_letters_and_numbers),2):
+            if i<len(valid_letters_and_numbers)-1:
+                valid_moves.append(valid_letters_and_numbers[i]+valid_letters_and_numbers[i+1])
 
-    return valid_numbers, valid_letters, valid_moves_with_tuples
+    return valid_numbers, valid_letters, valid_moves
 
 
 
