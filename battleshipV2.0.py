@@ -17,6 +17,15 @@ def display_board(board):
         print('')
 
 
+def validate_coordinates(size):
+    abc_letters = string.ascii_uppercase
+    validate_letters_numbers = [] 
+    for letter in range(size):
+        validate_letters_numbers.extend([abc_letters[letter], letter])
+
+    return validate_letters_numbers
+
+
 def battleship_main():
     # start menu()       5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
     # board = init_board(size=5)      pálya létrehozása              
