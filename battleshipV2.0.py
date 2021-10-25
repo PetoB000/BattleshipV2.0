@@ -76,12 +76,21 @@ def ask_for_fleets():
     valid_moves = get_valid_moves(size=5)[2]
     print(valid_moves)
     while True:
-        fleet_placement = input("Please place your fleets: ")
-        if fleet_placement.upper() in valid_moves:
-            return fleet_placement
-        if fleet_placement not in valid_moves:
+        fleet_input = input("Please place your fleets: ")
+        if fleet_input.upper() in valid_moves:
+            return fleet_input.upper()
+        if fleet_input not in valid_moves:
             print("Not a valid move, please try again! ")
             continue
+
+
+def convert_input_to_coordinates(coord):
+    valid_numbers, valid_letters = get_valid_moves(size=5)[0], get_valid_moves(size=5)[1]
+    row_index, col_index = coord[0], coord[1:]
+    row = valid_letters.index(row_index)
+    col = valid_numbers.index(col_index)
+    return row, col
+
 
 
 def placement_phase(board, size):
@@ -90,9 +99,18 @@ def placement_phase(board, size):
         placing_status = 'placing fleets'
 
     while placing_status == 'placing fleets':          
-        fleet_placement = ask_for_fleets()
+        fleet_input = ask_for_fleets()
         direction = ask_direction()
-        print(fleet_placement, direction)
+        row, col = convert_input_to_coordinates(fleet_input)
+        if direction == "h":
+            if col < size - 1:
+                board[row][col] = '■'
+                board[row][col+1] = '■'
+                display_board(board)
+            else:
+                print("Invalid placement, pls try again!")
+                direction = ask_direction() 
+        print(board, fleet_input, direction, row, col)
         placing_status = 'exit'
     
 
