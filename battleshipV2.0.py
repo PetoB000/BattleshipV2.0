@@ -73,6 +73,13 @@ def display_board(board):
         print('')
 
 
+def validate_coordinates(size):
+    abc_letters = string.ascii_uppercase
+    validate_letters_numbers = [] 
+    for letter in range(size):
+        validate_letters_numbers.extend([abc_letters[letter], letter])
+
+    return validate_letters_numbers
 
 def get_shoot():
     move = input("Give a coordinate:")
