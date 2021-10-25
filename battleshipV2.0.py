@@ -1,61 +1,10 @@
-import time, os
+import time
+import os
 import string
 
-def start_menu():
-    print(
-"""
 
-
-
-        Hi, and welcome to the Battleship game!
-
-  
-
-                                        The board size is 5 x 5.
-
-                                        You have to place 2 small ships(2x1) and 2 big ships (2x2) by giving the coordinates.
-
-                                        The faster who find the other player's ships is the winner!
-
-
-        Please choose from the following options:
-
-                \ \_____
-                ###[==_____>  1. Play Battleship Human vs. Human
-                /_/      __
-                            \ \_____
-                        ###[==_____  > 2. Quit
-                            /_/
-
-
-
-""")
-
-# ha kivalasztotta a jatekomodot ES felrakta a sajat hajoit feljon ez a 2. ASCII  sleep 3 sec aztan indul a lovoldozo fazis
-
-"""
-Let's play!
-     ....
-         ,''. :   __
-             \|_.'  `:       _.----._//_
-            .'  .'.`'-._   .'  _/ -._ \)-.----O
-           '._.'.'      '--''-'._   '--..--'-`
-            .'.'___    /`'---'. / ,-'`
-ssss      _<__.-._))../ /'----'/.'_____:'.
-   \_    :            \ ]              :  '.
-     \___:             \\              :    '.
-         :              \\__           :    .'
-         :_______________|__]__________:  .'
-                    .' __ '.           :.'
-                  .' .'  '. '.
-                .' .'      '. '.
-              .' .'          '. '.
-           _.' .'______________'. '._
-          [_0______________________0_]
-          
-          
-          """
-
+def clear():
+    os.system("clear")
 
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
@@ -105,7 +54,47 @@ def battleship_main():
     # game_logic()                                          > az egész csapat
         pass
 
+def menu():
+    os.system("clear")
+print("""
 
+
+
+        Welcome to the Battleship game!
+
+  
+
+                    The board size is 5 x 5.
+
+                    You have to place 2 small ships (2x1) and 2 big ships (2x2) by giving the coordinates.
+
+                    The first, who find the other player's ships, is the winner!
+
+
+        Please choose from the following options:
+
+                            _
+                            \ \_______
+                        ###[==______   > Press 1 to play Battleship Human vs. Human 
+                            /_/             __
+                                            \ \_____
+                                        ###[==_____  > Press 2 to Quit
+                                            /_/
+
+
+
+""")
+while True:
+    option = input("1.Play Battleship Human vs. Human\n2.Quit\n\n")
+    if input == 1:
+        display_board(board)
+    if input == 2:
+        os.exit
+        print("Please choose a number from the menu!\n\n")
+        continue
+    break
+
+menu()
 
 
 if __name__ == "__main__":
