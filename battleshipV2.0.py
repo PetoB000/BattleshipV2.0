@@ -78,15 +78,26 @@ def validate_coordinates(size):
     validate_letters_numbers = [] 
     for letter in range(size):
         validate_letters_numbers.extend([abc_letters[letter], letter])
-
     return validate_letters_numbers
 
+
 def get_shoot():
+    letters = {A:0, B:1, C:2, D:3, E:4}
+    numbers = {1:0, 2:1, 3:2, 4:3, 5:4}
     move = input("Give a coordinate:")
-    valid = validate_coordinates()
-    if valid == True:
-        row, col = move[0], move[1]
-        return row, col
+    valid_moves = validate_coordinates(size)
+    if move[0].isalpha() and move[1].isnumeric():
+        if move[0] and move[1] in valid_moves:
+            row, col = move[0], move[1]
+            return row, col
+        print("Invalid input")
+    print("Invalid input")
+
+
+def hit_confirm(board, row, col):
+    if board[row][col] == "X":
+        return True
+
 
 def battleship_main():
     # start menu()       5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
