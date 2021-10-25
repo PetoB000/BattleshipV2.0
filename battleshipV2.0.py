@@ -1,10 +1,5 @@
 import time, os
-
-def init_board(size):
-    board = [["0" for _ in range(size)] for _ in range(size)]
-    return board
-
-
+import string
 
 def start_menu():
     print(
@@ -18,7 +13,7 @@ def start_menu():
 
                                         The board size is 5 x 5.
 
-                                        You have to place 2 small ships(2x1) and 2 big ships (2x2).
+                                        You have to place 2 small ships(2x1) and 2 big ships (2x2) by giving the coordinates.
 
                                         The faster who find the other player's ships is the winner!
 
@@ -36,7 +31,7 @@ def start_menu():
 
 """)
 
-# ha kivalasztotta a jatekomodot sleep 1sec, feljon a 2. ASCII mondjuk sleep 3 sec aztan indul a jatek 
+# ha kivalasztotta a jatekomodot ES felrakta a sajat hajoit feljon ez a 2. ASCII  sleep 3 sec aztan indul a lovoldozo fazis
 
 """
 Let's play!
@@ -62,6 +57,29 @@ ssss      _<__.-._))../ /'----'/.'_____:'.
           """
 
 
+def init_board(size):
+    board = [["0" for _ in range(size)] for _ in range(size)]
+    return board
+
+
+def display_board(board):
+    abc_letters_up = string.ascii_uppercase
+    for number in range(len(board)+1):
+        print(' ' if number == 0 else number, end=' ')
+    print('')
+    for row in range(len(board)+1):
+        for col in range(len(board)+1):
+            print(abc_letters_up[row] if col == 0 else 'O', end=' ')
+        print('')
+
+
+
+def get_shoot():
+    move = input("Give a coordinate:")
+    valid = validate_coordinates()
+    if valid == True:
+        row, col = move[0], move[1]
+        return row, col
 
 def battleship_main():
     # start menu()       5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
