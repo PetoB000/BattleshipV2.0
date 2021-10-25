@@ -148,11 +148,17 @@ def get_valid_moves(size=5):
 
 
 def get_shoot():
-    move = input("Give a coordinate:")
-    valid = get_valid_moves()
-    if valid == True:
-        row, col = move[0], move[1]
-        return row, col
+    letters, numbers = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4}, {'1':0, '2':1, '3':2, '4':3, '5':4}
+    while True:
+        move = input("Give a coordinate:").upper()
+        if move[0].isalpha() and move[1].isnumeric():
+            if len(move) < 3:
+                if move[0] in letters and move[1] in numbers:
+                    row, col = letters[move[0]], numbers[move[1]]
+                    return row, col
+                print('Given coordinates are out of field')
+            print("Invalid input")
+        print("Invalid input")
 
 
 def battleship_main():
