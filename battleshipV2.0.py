@@ -7,6 +7,7 @@ import sys
 def clear():
     os.system("clear")
 
+
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
@@ -117,6 +118,27 @@ def get_shoot():
                 print('Given coordinates are out of field')
             print("Invalid input")
         print("Invalid input")
+
+
+def hit_confirm(board, row, col):
+    if board[row][col] == '■' and board[row][col+1] == 'H':
+        board[row][col], board[row][col+1] = 'S'
+        return board[row][col], board[row][col + 1]
+    elif board[row][col] == '■' and board[row][col+1] == '■':
+        board[row][col] = 'H'
+        return board[row][col]
+    elif board[row][col] == '■' and board[row+1][col] == 'H':
+        board[row][col], board[row+1][col] = 'S'
+        return board[row][col], board[row+1][col]
+    elif board[row+1][col] == '■' and board[row][col] == '■':
+        board[row][col] = 'H'
+        return board[row][col]
+    elif board[row][col] == '■' and board[row][col+1] == '0' or board[row][col+1] == 'M':
+        board[row][col] = 'S'
+        return board[row][col]
+    elif board[row][col] == '■' and board[row+1][col] == '0' or board[row+1][col] == 'M':
+        board[row][col] = 'S'
+        return board[row][col]
 
 
 def battleship_main():
