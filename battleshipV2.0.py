@@ -96,15 +96,23 @@ def get_valid_moves(size=5):
     return valid_numbers, valid_letters, valid_moves
 
 
+def get_player(player):
+    if player == "player1":
+        player = "player2"
+    else:
+        player = "player1"
+    return player
+
 
 def get_shoot():
-    letters, numbers = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4}, {'1':0, '2':1, '3':2, '4':3, '5':4}
+    """Asks for user input for the shot until the input is valid."""
+    valid_letters, valid_numbers = get_valid_moves()[1], get_valid_moves()[0]
     while True:
         move = input("Give a coordinate:").upper()
         if move[0].isalpha() and move[1].isnumeric():
             if len(move) < 3:
-                if move[0] in letters and move[1] in numbers:
-                    row, col = letters[move[0]], numbers[move[1]]
+                if move[0] in valid_letters and move[1] in valid_numbers:
+                    row, col = move[0], move[1]
                     return row, col
                 print('Given coordinates are out of field')
             print("Invalid input")
