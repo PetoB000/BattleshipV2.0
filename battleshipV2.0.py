@@ -7,23 +7,14 @@ import sys
 def clear():
     os.system("clear")
 
+
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
 
 
-def ask_direction():
-    while True:
-        direction = input("Horizontal or vertical? ")   # ide kell majd egy feltétel attól függően mekkore flottát tesz le
-        if direction.lower() == "h" or direction.lower() == "v":
-            return direction
-        else:
-            print("It is not valid, please try again!")
-            continue
-
-
 def ask_for_fleets():
-    valid_moves = get_valid_moves(size=5)[2]
+    valid_moves = get_valid_moves()[2]
     print(valid_moves)
     while True:
         fleet_input = input("Please place your fleets: ")
@@ -34,21 +25,30 @@ def ask_for_fleets():
             continue
 
 
+def ask_direction():
+    while True:
+        direction = input("Horizontal or vertical? ")   # ide kell majd egy feltétel attól függően mekkore flottát tesz le
+        if direction.lower() == "h" or direction.lower() == "v":
+            return direction.lower()
+        else:
+            print("It is not valid, please try again!")
+            continue
+
+
 def convert_input_to_coordinates(coord):
-    valid_numbers, valid_letters = get_valid_moves(size=5)[0], get_valid_moves(size=5)[1]
+    valid_numbers, valid_letters = get_valid_moves()[0], get_valid_moves()[1]
     row_index, col_index = coord[0], coord[1:]
     row = valid_letters.index(row_index)
     col = valid_numbers.index(col_index)
     return row, col
 
 
+def checking_right_direction(board, size, value, row, col, direction):
+    pass # nem biztos hogy ki kell szervezni..
 
-def placement_phase(board, size):
-    if size == 5:
-        fleets = {2: 2, 2: 1}
-        placing_status = 'placing fleets'
 
-    while placing_status == 'placing fleets':          
+def placing_2_block_long_ship(board, size, value):
+    while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
         row, col = convert_input_to_coordinates(fleet_input)
@@ -57,12 +57,47 @@ def placement_phase(board, size):
                 board[row][col] = '■'
                 board[row][col+1] = '■'
                 display_board(board)
+                print(board, fleet_input, direction, row, col)
+                value -= 1
             else:
                 print("Invalid placement, pls try again!")
-                direction = ask_direction() 
-        print(board, fleet_input, direction, row, col)
+                continue
+        if direction == "v":
+            if row < size -1:
+                board[row][col] = '■'
+                board[row+1][col] = '■'
+                display_board(board)
+                print(board, fleet_input, direction, row, col)
+                value -= 1
+            else:
+                print("Invalid placement, pls try again!")
+                continue
+    return board
+
+
+def placing_1_block_long_ship(board, value):
+    while value != 0:                          
+        fleet_input = ask_for_fleets()
+        row, col = convert_input_to_coordinates(fleet_input)
+        board[row][col] = '■'
+        display_board(board)
+        value -= 1
+    return board
+
+
+def placement_phase(board, size):
+    if size == 5:
+        fleets = {"2 block long ship": 2, "1 block long ship": 2}
+        placing_status = 'placing fleets'
+
+    while placing_status == 'placing fleets':
+        for key, value in fleets.items():
+            if key == "2 block long ship":
+                board = placing_2_block_long_ship(board, size, value)
+            if key == "1 block long ship":
+                board = placing_1_block_long_ship(board, value)
         placing_status = 'exit'
-    
+    return board             
 
 
 def display_board(board):
@@ -70,9 +105,9 @@ def display_board(board):
     for number in range(len(board)+1):
         print(' ' if number == 0 else number, end=' ')
     print('')
-    for row in range(len(board)+1):
-        for col in range(len(board)+1):
-            print(abc_letters_up[row] if col == 0 else 'O', end=' ')
+    for row in range(len(board)):
+        for col in range(len(board)):
+            print(abc_letters_up[row] if col == 0 else board[row][col], end=' ')
         print('')
 
 
@@ -115,16 +150,18 @@ def battleship_main():
     menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
     board = init_board(size=5)      # pálya létrehozása              
     display_board(board)       # pálya megjelenítése    > Marci
-    placement_phase(board, size=5)
+    board = placement_phase(board, size=5)
         # ask_fleets()                                      > Zsu
         # validate_coordinates()
+    display_board(board)
+    row, col = get_shoot()
+    print(row, col)
 
-    # get_shoot()
         # input kérés 
         # validate coordinates()                           > Balázs
         # return row col 
 
-    # hit_confirm(board1, board2, row, col)               > Balázs 
+    # hit_confirm(board, row, col)               > Balázs 
     # game_logic()                                          > az egész csapat
     pass
 
