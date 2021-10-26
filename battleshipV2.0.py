@@ -7,7 +7,7 @@ import sys
 def clear():
     os.system("clear")
 
-
+size = 5
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
@@ -102,14 +102,21 @@ def placement_phase(board, size):
 
 def display_board(board):
     abc_letters_up = string.ascii_uppercase
-    for number in range(len(board)+1):
-        print(' ' if number == 0 else number, end=' ')
+    for number in range(len(board)):
+        if number == 0:
+            print('  ' + str(number+1), end = ' ')
+        else:
+            print(str(number+1), end = ' ')
     print('')
     for row in range(len(board)):
         for col in range(len(board)):
-            print(abc_letters_up[row] if col == 0 else board[row][col], end=' ')
+            if col == 0:
+                print(abc_letters_up[row]+ ' '+board[row][col], end=' ')
+            else:
+                print(board[row][col], end=' ')
         print('')
-
+    print('')
+    
 
 def get_valid_moves(size=5):
     abc_letters = string.ascii_uppercase
