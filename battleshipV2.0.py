@@ -45,12 +45,12 @@ def menu():
                 print(f.read())
                 time.sleep(3)
                 clear()
+                break
         if option == "2":
                 sys.exit()
         if option not in ["1","2"]:
                 print("Please choose a number from the menu!\n\n")
                 continue
-menu()
 
 size = 5
 def init_board(size):
