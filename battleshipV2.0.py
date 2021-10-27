@@ -6,6 +6,51 @@ import sys
 
 def clear():
     os.system("clear")
+def menu():
+    clear()
+    print("""
+
+
+
+        Welcome to the Battleship game!
+
+  
+
+                    The board size is 5 x 5.
+
+                    You have to place 2 small ships (2x1) and 2 big ships (2x2) by giving the coordinates.
+
+                    The first, who find the other player's ships, is the winner!
+
+
+        Please choose from the following options:
+
+                            _
+                            \ \_______
+                        ###[==______   > Press 1 to play Battleship Human vs. Human 
+                            /_/             __
+                                            \ \_____
+                                        ###[==_____  > Press 2 to Quit
+                                            /_/
+
+
+
+        """)
+
+    while True:
+        option = input("Have fun!\n\n")
+        if option == "1":
+                clear()
+                f = open("logo.txt", "r")
+                print(f.read())
+                time.sleep(3)
+                clear()
+                break
+        if option == "2":
+                sys.exit()
+        if option not in ["1","2"]:
+                print("Please choose a number from the menu!\n\n")
+                continue
 
 size = 5
 def init_board(size):
@@ -189,66 +234,41 @@ def hit_confirm(board, row, col):
         return board[row][col]
 
 
-def battleship_main():
-    menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
-    board = init_board(size=5)      # pálya létrehozása              
-    display_board(board)       # pálya megjelenítése    > Marci
-    board = placement_phase(board, size=5)
-        # ask_fleets()                                      > Zsu
-        # validate_coordinates()
-    display_board(board)
-    row, col = get_shoot()
-    print(row, col)
-
-        # input kérés 
-        # validate coordinates()                           > Balázs
-        # return row col 
-
-    # hit_confirm(board, row, col)               > Balázs 
-    # game_logic()                                          > az egész csapat
+def game_logic(board):
     pass
 
-def menu():
-    os.system("clear")
-print("""
 
+def battleship_main():
+    menu()       
+    player_1_board, player_2_board = init_board(size=5), init_board(size=5)
+    player1, player2 = player_1_board, player_2_board
+    counter = 50
+    player_1_board = placement_phase(player_1_board, size=5)
+    player_2_board = placement_phase(player_2_board, size=5)
+    # display_board(board)
+    while counter != 0:
+        if counter % 2 == 0:
+            #player1
+            display_board(player_1_board)
+            row, col = get_shoot()
+            hit_confirm(player_1_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        else:
+            #player2
+            display_board(player_2_board)
+            row, col = get_shoot()
+            hit_confirm(player_2_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        counter -= 1
 
+    # print(Its a draw) play again()
+    
 
-        Welcome to the Battleship game!
-
-  
-
-                    The board size is 5 x 5.
-
-                    You have to place 2 small ships (2x1) and 2 big ships (2x2) by giving the coordinates.
-
-                    The first, who find the other player's ships, is the winner!
-
-
-        Please choose from the following options:
-
-                            _
-                            \ \_______
-                        ###[==______   > Press 1 to play Battleship Human vs. Human 
-                            /_/             __
-                                            \ \_____
-                                        ###[==_____  > Press 2 to Quit
-                                            /_/
-
-
-
-""")
-while True:
-    option = input("1.Play Battleship Human vs. Human\n2.Quit\n\n")
-    if input == 1:
-        display_board(board)
-    if input == 2:
-        sys.exit()
-        print("Please choose a number from the menu!\n\n")
-        continue
-    break
-
-
+    # game_logic(player_1_board, player_2_board)                               
 
 if __name__ == "__main__":
     battleship_main()
