@@ -194,12 +194,12 @@ def get_player(player):
 
 def get_shoot():
     """Asks for user input for the shot until the input is valid."""
-    valid_letters, valid_numbers = get_valid_moves()[1], get_valid_moves()[0]
+    valid_moves = get_valid_moves()[2]
     while True:
         move = input("Give a coordinate:").upper()
         if move[0].isalpha() and move[1].isnumeric():
             if len(move) < 3:
-                if move[0] in valid_letters and move[1] in valid_numbers:
+                if move in valid_moves:
                     row, col = move[0], move[1]
                     return row, col
                 print('Given coordinates are out of field')
@@ -208,44 +208,68 @@ def get_shoot():
 
 
 def hit_confirm(board, row, col):
-    if board[row][col] == '■' and board[row][col+1] == 'H':
+    if board[row][col] == '0':
+        board[row][col] = 'M'
+        return board[row][col]
+    elif board[row][col] == '■' and board[row][col+1] == 'H' or \
+        board[row][col] == '■' and board[row][col-1] == 'H' or \
+        board[row][col] == '■' and board[row+1][col] == 'H' or \
+        board[row][col] == '■' and board[row+1][col] == 'H':
         board[row][col], board[row][col+1] = 'S'
-        return board[row][col], board[row][col + 1]
-    elif board[row][col] == '■' and board[row][col+1] == '■':
+        return board[row][col], board[row][col+1]
+    elif board[row][col] == '■' and board[row][col+1] == '■' or \
+        board[row][col] == '■' and board[row][col-1] == '■' or \
+        board[row+1][col] == '■' and board[row][col] == '■' or \
+        board[row-1][col] == '■' and board[row][col] == '■':
         board[row][col] = 'H'
         return board[row][col]
-    elif board[row][col] == '■' and board[row+1][col] == 'H':
-        board[row][col], board[row+1][col] = 'S'
-        return board[row][col], board[row+1][col]
-    elif board[row+1][col] == '■' and board[row][col] == '■':
-        board[row][col] = 'H'
-        return board[row][col]
-    elif board[row][col] == '■' and board[row][col+1] == '0' or board[row][col+1] == 'M':
+    elif board[row][col] == '■' and board[row][col+1] == '0' or \
+            board[row][col] == '■' and board[row][col+1] == 'M'or \
+            board[row][col] == '■' and board[row][col-1] == '0' or \
+            board[row][col] == '■' and board[row][col-1] == 'M' or \
+            board[row][col] == '■' and board[row+1][col] == '0' or \
+            board[row][col] == '■' and board[row+1][col] == 'M' or \
+            board[row][col] == '■' and board[row-1][col] == '0' or \
+            board[row][col] == '■' and board[row-1][col] == 'M':
         board[row][col] = 'S'
         return board[row][col]
-    elif board[row][col] == '■' and board[row+1][col] == '0' or board[row+1][col] == 'M':
-        board[row][col] = 'S'
-        return board[row][col]
+
+
+def game_logic(board):
+    pass
 
 
 def battleship_main():
-    menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
-    board = init_board(size=5)      # pálya létrehozása              
-    display_board(board)       # pálya megjelenítése    > Marci
-    board = placement_phase(board, size=5)
-        # ask_fleets()                                      > Zsu
-        # validate_coordinates()
-    display_board(board)
-    row, col = get_shoot()
-    print(row, col)
+    menu()       
+    player_1_board, player_2_board = init_board(size=5), init_board(size=5)
+    player1, player2 = player_1_board, player_2_board
+    counter = 50
+    player_1_board = placement_phase(player_1_board, size=5)
+    player_2_board = placement_phase(player_2_board, size=5)
+    # display_board(board)
+    while counter != 0:
+        if counter % 2 == 0:
+            #player1
+            display_board(player_1_board)
+            row, col = get_shoot()
+            hit_confirm(player_1_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        else:
+            #player2
+            display_board(player_2_board)
+            row, col = get_shoot()
+            hit_confirm(player_2_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        counter -= 1
 
-        # input kérés 
-        # validate coordinates()                           > Balázs
-        # return row col 
+    # print(Its a draw) play again()
+    
 
-    # hit_confirm(board, row, col)               > Balázs 
-    # game_logic()                                          > az egész csapat
-    pass
+    # game_logic(player_1_board, player_2_board)                               
 
 if __name__ == "__main__":
     battleship_main()
