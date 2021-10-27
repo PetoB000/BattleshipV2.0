@@ -227,24 +227,41 @@ def hit_confirm(board, row, col):
         return board[row][col]
 
 
-def battleship_main():
-    menu()       #5*5-ös pálya ( 2*2 flotta, meg 2*1 flotta ), plusz üdvözlés, meg egy kilépési lehetőség    >  Marcsi
-    board = init_board(size=5)      # pálya létrehozása              
-    display_board(board)       # pálya megjelenítése    > Marci
-    board = placement_phase(board, size=5)
-        # ask_fleets()                                      > Zsu
-        # validate_coordinates()
-    display_board(board)
-    row, col = get_shoot()
-    print(row, col)
-
-        # input kérés 
-        # validate coordinates()                           > Balázs
-        # return row col 
-
-    # hit_confirm(board, row, col)               > Balázs 
-    # game_logic()                                          > az egész csapat
+def game_logic(board):
     pass
+
+
+def battleship_main():
+    menu()       
+    player_1_board, player_2_board = init_board(size=5), init_board(size=5)
+    player1, player2 = player_1_board, player_2_board
+    counter = 50
+    player_1_board = placement_phase(player_1_board, size=5)
+    player_2_board = placement_phase(player_2_board, size=5)
+    # display_board(board)
+    while counter != 0:
+        if counter % 2 == 0:
+            #player1
+            display_board(player_1_board)
+            row, col = get_shoot()
+            hit_confirm(player_1_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        else:
+            #player2
+            display_board(player_2_board)
+            row, col = get_shoot()
+            hit_confirm(player_2_board, row, col)
+            # if has_won(player_1_board, size=5):
+            # print player1 won
+            #   play again() 
+        counter -= 1
+
+    # print(Its a draw) play again()
+    
+
+    # game_logic(player_1_board, player_2_board)                               
 
 if __name__ == "__main__":
     battleship_main()
