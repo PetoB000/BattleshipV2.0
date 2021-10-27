@@ -2,6 +2,7 @@ import time
 import os
 import string
 import sys
+import copy
 
 
 def clear():
@@ -87,7 +88,13 @@ def convert_input_to_coordinates(coord):
     return row, col
 
 
-def checking_right_direction(board, size, value, row, col, direction):
+def checking_valid_fleetplacing(board, fleet_input=0, direction=0):
+    for row in range(len(board)):
+        for col in range(len(board[row])):
+            if row >= 1:
+                if board[row-1][col] == '■':
+                    pass
+    
     pass # nem biztos hogy ki kell szervezni..
 
 
@@ -95,9 +102,11 @@ def placing_2_block_long_ship(board, size, value):
     while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
+        #checker?
         row, col = convert_input_to_coordinates(fleet_input)
         if direction == "h":
             if col < size - 1:
+                #checking_valid_fleetplacing(board)
                 board[row][col] = '■'
                 board[row][col+1] = '■'
                 display_board(board)
@@ -145,6 +154,14 @@ def placement_phase(board, size):
 
 
 def display_board(board):
+    # abc_letters_up = string.ascii_uppercase
+    # print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
+    # for i in range(len(board)):
+    #     for col in range(1):
+    #         print(f"{abc_letters_up[i]} {board[i][col]} {board[i][col]} "
+    #               f"{board[i][col]} {board[i][col]} {board[i][col]}"
+    #               f"\t\t\t\t{abc_letters_up[i]} {board[i][col]} "
+    #               f"{board[i][col]} {board[i][col]} {board[i][col]} {board[i][col]}")
     abc_letters_up = string.ascii_uppercase
     for number in range(len(board)):
         if number == 0:
@@ -209,11 +226,17 @@ def hit_confirm(board, row, col):
     if board[row][col] == '0':
         board[row][col] = 'M'
         return board
-    elif board[row][col] == '■' and board[row][col+1] == 'H' or \
-        board[row][col] == '■' and board[row][col-1] == 'H' or \
-        board[row][col] == '■' and board[row+1][col] == 'H' or \
-        board[row][col] == '■' and board[row+1][col] == 'H':
-        board[row][col], board[row][col+1] = 'S', 'S'
+    elif board[row][col] == '■' and board[row][col+1] == 'H':
+        board[row][col], board[row][col+1] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row][col-1] == 'H':
+        board[row][col], board[row][col-1] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row+1][col] == 'H':
+        board[row][col], board[row+1][col] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row-1][col] == 'H':
+        board[row][col], board[row-1][col] = 'S'
         return board
     elif board[row][col] == '■' and board[row][col+1] == '■' or \
         board[row][col] == '■' and board[row][col-1] == '■' or \
