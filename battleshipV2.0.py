@@ -199,8 +199,8 @@ def get_shoot():
         move = input("Give a coordinate:").upper()
         if move[0].isalpha() and move[1].isnumeric():
             if len(move) < 3:
-                if move[0] in valid_letters and move[1] in valid_numbers:
-                    row, col = move[0], move[1]
+                if move in valid_moves:
+                    move = convert_input_to_coordinates()
                     return row, col
                 print('Given coordinates are out of field')
             print("Invalid input")
@@ -208,24 +208,56 @@ def get_shoot():
 
 
 def hit_confirm(board, row, col):
-    if board[row][col] == '■' and board[row][col+1] == 'H':
+    if board[row][col] == '0':
+        board[row][col] = 'M'
+        return board
+    elif board[row][col] == '■' and board[row][col+1] == 'H':
         board[row][col], board[row][col+1] = 'S'
-        return board[row][col], board[row][col + 1]
-    elif board[row][col] == '■' and board[row][col+1] == '■':
-        board[row][col] = 'H'
-        return board[row][col]
+        return board
+    elif board[row][col] == '■' and board[row][col-1] == 'H':
+        board[row][col], board[row][col-1] = 'S'
+        return board
     elif board[row][col] == '■' and board[row+1][col] == 'H':
         board[row][col], board[row+1][col] = 'S'
-        return board[row][col], board[row+1][col]
-    elif board[row+1][col] == '■' and board[row][col] == '■':
+        return board
+    elif board[row][col] == '■' and board[row-1][col] == 'H':
+        board[row][col], board[row-1][col] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row][col+1] == '■' or \
+        board[row][col] == '■' and board[row][col-1] == '■' or \
+        board[row+1][col] == '■' and board[row][col] == '■' or \
+        board[row-1][col] == '■' and board[row][col] == '■':
         board[row][col] = 'H'
-        return board[row][col]
-    elif board[row][col] == '■' and board[row][col+1] == '0' or board[row][col+1] == 'M':
+        return board
+    elif board[row][col] == '■' and board[row][col+1] == '0' or \
+            board[row][col] == '■' and board[row][col+1] == 'M'or \
+            board[row][col] == '■' and board[row][col-1] == '0' or \
+            board[row][col] == '■' and board[row][col-1] == 'M' or \
+            board[row][col] == '■' and board[row+1][col] == '0' or \
+            board[row][col] == '■' and board[row+1][col] == 'M' or \
+            board[row][col] == '■' and board[row-1][col] == '0' or \
+            board[row][col] == '■' and board[row-1][col] == 'M':
         board[row][col] = 'S'
-        return board[row][col]
-    elif board[row][col] == '■' and board[row+1][col] == '0' or board[row+1][col] == 'M':
-        board[row][col] = 'S'
-        return board[row][col]
+        return board
+
+def has_won(board, size=5):
+    count_s_element = 0
+    for row in range(len(board)):
+        for col in range(len(board)):
+           board[col][row] == 'S'
+           count_s_element += 1
+    if size == 5:
+        if count_s_element == 6:
+            return True
+        else:
+            return False
+
+def game_result(player):
+    print(f'Congratulations, {player} is the winner!')
+
+
+def game_logic(board):
+    pass
 
 
 def battleship_main():
