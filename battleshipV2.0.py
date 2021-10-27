@@ -199,7 +199,7 @@ def get_shoot():
         if move[0].isalpha() and move[1].isnumeric():
             if len(move) < 3:
                 if move in valid_moves:
-                    row, col = move[0], move[1]
+                    move = convert_input_to_coordinates()
                     return row, col
                 print('Given coordinates are out of field')
             print("Invalid input")
@@ -209,19 +209,19 @@ def get_shoot():
 def hit_confirm(board, row, col):
     if board[row][col] == '0':
         board[row][col] = 'M'
-        return board[row][col]
+        return board
     elif board[row][col] == '■' and board[row][col+1] == 'H' or \
         board[row][col] == '■' and board[row][col-1] == 'H' or \
         board[row][col] == '■' and board[row+1][col] == 'H' or \
         board[row][col] == '■' and board[row+1][col] == 'H':
         board[row][col], board[row][col+1] = 'S'
-        return board[row][col], board[row][col+1]
+        return board
     elif board[row][col] == '■' and board[row][col+1] == '■' or \
         board[row][col] == '■' and board[row][col-1] == '■' or \
         board[row+1][col] == '■' and board[row][col] == '■' or \
         board[row-1][col] == '■' and board[row][col] == '■':
         board[row][col] = 'H'
-        return board[row][col]
+        return board
     elif board[row][col] == '■' and board[row][col+1] == '0' or \
             board[row][col] == '■' and board[row][col+1] == 'M'or \
             board[row][col] == '■' and board[row][col-1] == '0' or \
@@ -231,7 +231,7 @@ def hit_confirm(board, row, col):
             board[row][col] == '■' and board[row-1][col] == '0' or \
             board[row][col] == '■' and board[row-1][col] == 'M':
         board[row][col] = 'S'
-        return board[row][col]
+        return board
 
 
 def game_logic(board):
