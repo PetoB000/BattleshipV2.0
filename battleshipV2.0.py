@@ -210,11 +210,17 @@ def hit_confirm(board, row, col):
     if board[row][col] == '0':
         board[row][col] = 'M'
         return board
-    elif board[row][col] == '■' and board[row][col+1] == 'H' or \
-        board[row][col] == '■' and board[row][col-1] == 'H' or \
-        board[row][col] == '■' and board[row+1][col] == 'H' or \
-        board[row][col] == '■' and board[row+1][col] == 'H':
+    elif board[row][col] == '■' and board[row][col+1] == 'H':
         board[row][col], board[row][col+1] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row][col-1] == 'H':
+        board[row][col], board[row][col-1] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row+1][col] == 'H':
+        board[row][col], board[row+1][col] = 'S'
+        return board
+    elif board[row][col] == '■' and board[row-1][col] == 'H':
+        board[row][col], board[row-1][col] = 'S'
         return board
     elif board[row][col] == '■' and board[row][col+1] == '■' or \
         board[row][col] == '■' and board[row][col-1] == '■' or \
