@@ -60,7 +60,6 @@ def init_board(size):
 
 def ask_for_fleets():
     valid_moves = get_valid_moves()[2]
-    print(valid_moves)
     while True:
         fleet_input = input("Please place your fleets: ")
         if fleet_input.upper() in valid_moves:
@@ -199,7 +198,7 @@ def get_shoot():
         if move[0].isalpha() and move[1].isnumeric():
             if len(move) < 3:
                 if move in valid_moves:
-                    move = convert_input_to_coordinates()
+                    row, col = convert_input_to_coordinates(move)
                     return row, col
                 print('Given coordinates are out of field')
             print("Invalid input")
@@ -214,7 +213,7 @@ def hit_confirm(board, row, col):
         board[row][col] == '■' and board[row][col-1] == 'H' or \
         board[row][col] == '■' and board[row+1][col] == 'H' or \
         board[row][col] == '■' and board[row+1][col] == 'H':
-        board[row][col], board[row][col+1] = 'S'
+        board[row][col], board[row][col+1] = 'S', 'S'
         return board
     elif board[row][col] == '■' and board[row][col+1] == '■' or \
         board[row][col] == '■' and board[row][col-1] == '■' or \
@@ -245,14 +244,15 @@ def battleship_main():
     player1, player2 = player_1_board, player_2_board
     counter = 50
     player_1_board = placement_phase(player_1_board, size=5)
-    player_2_board = placement_phase(player_2_board, size=5)
+    #player_2_board = placement_phase(player_2_board, size=5)
     # display_board(board)
     while counter != 0:
         if counter % 2 == 0:
             #player1
             display_board(player_1_board)
             row, col = get_shoot()
-            hit_confirm(player_1_board, row, col)
+            player_1_board = hit_confirm(player_1_board, row, col)
+            display_board(player_1_board)
             # if has_won(player_1_board, size=5):
             # print player1 won
             #   play again() 
@@ -260,7 +260,8 @@ def battleship_main():
             #player2
             display_board(player_2_board)
             row, col = get_shoot()
-            hit_confirm(player_2_board, row, col)
+            player_2_board = hit_confirm(player_2_board, row, col)
+            display_board(player_2_board)
             # if has_won(player_1_board, size=5):
             # print player1 won
             #   play again() 
