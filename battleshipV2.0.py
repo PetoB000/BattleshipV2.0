@@ -44,6 +44,7 @@ def menu():
                 f = open("logo.txt", "r")
                 print(f.read())
                 time.sleep(3)
+                f.close()
                 clear()
                 break
         if option == "2":
