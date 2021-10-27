@@ -241,6 +241,7 @@ def game_logic(board):
 def battleship_main():
     menu()       
     player_1_board, player_2_board = init_board(size=5), init_board(size=5)
+    display_board(player_1_board)
     player1, player2 = player_1_board, player_2_board
     counter = 50
     player_1_board = placement_phase(player_1_board, size=5)
