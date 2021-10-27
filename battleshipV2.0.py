@@ -7,6 +7,55 @@ import sys
 def clear():
     os.system("clear")
 
+
+def menu():
+    clear()
+    print("""
+
+
+
+        Welcome to the Battleship game!
+
+  
+
+                    The board size is 5 x 5.
+
+                    You have to place 2 small ships (2x1) and 2 big ships (2x2) by giving the coordinates.
+
+                    The first, who find the other player's ships, is the winner!
+
+
+        Please choose from the following options:
+
+                            _
+                            \ \_______
+                        ###[==______   > Press 1 to play Battleship Human vs. Human 
+                            /_/             __
+                                            \ \_____
+                                        ###[==_____  > Press 2 to Quit
+                                            /_/
+
+
+
+        """)
+
+    while True:
+        option = input("1.Play Battleship Human vs. Human\n2.Quit\n\n")
+        if option in ["1","2"]:
+            if option == "1":
+                clear()
+                f = open("logo.txt", "r")
+                print(f.readline())
+                time.sleep(3)
+                f.close()
+            if option == "2":
+                sys.exit()
+        else:
+            print("Please choose a number from the menu!\n\n")
+            continue
+menu()
+
+
 def init_board(size):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
@@ -127,48 +176,6 @@ def battleship_main():
     # hit_confirm(board1, board2, row, col)               > Balázs 
     # game_logic()                                          > az egész csapat
     pass
-
-def menu():
-    os.system("clear")
-print("""
-
-
-
-        Welcome to the Battleship game!
-
-  
-
-                    The board size is 5 x 5.
-
-                    You have to place 2 small ships (2x1) and 2 big ships (2x2) by giving the coordinates.
-
-                    The first, who find the other player's ships, is the winner!
-
-
-        Please choose from the following options:
-
-                            _
-                            \ \_______
-                        ###[==______   > Press 1 to play Battleship Human vs. Human 
-                            /_/             __
-                                            \ \_____
-                                        ###[==_____  > Press 2 to Quit
-                                            /_/
-
-
-
-""")
-while True:
-    option = input("1.Play Battleship Human vs. Human\n2.Quit\n\n")
-    if input == 1:
-        display_board(board)
-    if input == 2:
-        sys.exit()
-        print("Please choose a number from the menu!\n\n")
-        continue
-    break
-
-
 
 if __name__ == "__main__":
     battleship_main()
