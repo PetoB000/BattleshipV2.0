@@ -255,6 +255,20 @@ def hit_confirm(board, row, col):
         board[row][col] = 'S'
         return board
 
+def has_won(board, size=5):
+    count_s_element = 0
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if board[row][col] == 'S':
+                count_s_element += 1
+    if size == 5:
+        if count_s_element == 6:
+            return True
+        else:
+            return False
+
+def game_result(text,player):
+    print(f'Congratulations, {player} is the winner!')
 
 def game_logic(board):
     pass
@@ -274,18 +288,28 @@ def battleship_main():
             #player1
             display_board(player_1_board)
             row, col = get_shoot()
+<<<<<<< HEAD
             player_1_board = hit_confirm(player_1_board, row, col)
             display_board(player_1_board)
             # if has_won(player_1_board, size=5):
+=======
+            hit_confirm(player_1_board, row, col)
+            if has_won(player_1_board):
+>>>>>>> 2c4fbb9e0cb035b0504e9e452a26eb0ee9e8c482
             # print player1 won
             #   play again() 
         else:
             #player2
             display_board(player_2_board)
             row, col = get_shoot()
+<<<<<<< HEAD
             player_2_board = hit_confirm(player_2_board, row, col)
             display_board(player_2_board)
             # if has_won(player_1_board, size=5):
+=======
+            hit_confirm(player_2_board, row, col)
+            if has_won(player_2_board):
+>>>>>>> 2c4fbb9e0cb035b0504e9e452a26eb0ee9e8c482
             # print player1 won
             #   play again() 
         counter -= 1
