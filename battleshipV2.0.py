@@ -136,7 +136,18 @@ def checking_valid_fleetplacing_col(board, row_check, col_check):
                     return True
 
 
-def placing_2_block_long_ship(board, size, value, fleet_positions):
+def fillup_fleet_pos_dict(numbers_of_ships, coordinates, fleets):
+    if numbers_of_ships == 2:
+        key, val = "2 block long ship", coordinates
+        fleets[key] = val
+    else:      
+        key, val = "2 block long ship", coordinates
+        dict_update = {key: val}
+        fleets.update(dict_update)
+    return fleets
+    
+
+def placing_2_block_long_ship(board, size, value, fleets):
     while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
@@ -147,12 +158,10 @@ def placing_2_block_long_ship(board, size, value, fleet_positions):
                     if checking_valid_fleetplacing_row(board, row, col+1) and checking_valid_fleetplacing_col(board, row, col+1):
                         board[row][col] = '■'
                         board[row][col+1] = '■'
-                        key, val = 2, ((row, col), (row, col+1))
-                        dict_update = {key: val}
-                        fleet_positions.update(dict_update)
-                        print(fleet_positions)
+                        coordinates = ((row, col), (row, col+1))
+                        fleet_positions = fillup_fleet_pos_dict(value, coordinates, fleets)
                         display_board(board)
-                        print(board, fleet_input, direction, row, col)
+                        print(board, fleet_input, direction, row, col, fleet_positions)
                         value -= 1
                     else:
                         print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
@@ -166,7 +175,7 @@ def placing_2_block_long_ship(board, size, value, fleet_positions):
         if direction == "v":
             if row < size -1:
                 if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row, col):
-                    if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row+1, col):
+                    if checking_valid_fleetplacing_row(board, row+1, col) and checking_valid_fleetplacing_col(board, row+1, col):
                         board[row][col] = '■'
                         board[row+1][col] = '■'
                         display_board(board)
@@ -181,7 +190,7 @@ def placing_2_block_long_ship(board, size, value, fleet_positions):
             else:
                 print("Invalid placement, pls try again!")
                 continue
-    return board
+    return board #, fleet_positions
 
 
 def placing_1_block_long_ship(board, value, fleet_positions):
@@ -211,12 +220,12 @@ def placement_phase(board, size):
     while placing_status == 'placing fleets':
         for key, value in fleets.items():
             if key == "2 block long ship":
-                board = placing_2_block_long_ship(board, size, value, fleet_positions)
+                board = placing_2_block_long_ship(board, size, value, fleets)
             if key == "1 block long ship":
-                board = placing_1_block_long_ship(board, value, fleet_positions)
+                board = placing_1_block_long_ship(board, value, fleets)
         placing_status = 'exit'
     
-    return board             
+    return board, fleet_positions             
 
 
 def display_board(board):
@@ -336,7 +345,7 @@ def hit_checking_around_row(board, row, col):
         pass
 
 
-def hit_function(board, row_shoot, col_shoot):
+def hit_function(board, row_shoot, col_shoot, fleet_pos):
     # if board[row_shoot][col_shoot] != 
     for row in range(len(board)):
         for col in range(len(board)):
@@ -349,6 +358,9 @@ def hit_function(board, row_shoot, col_shoot):
                     print("Too bad.. You have already shooted this field.. It's a MISS again!!")
                     return board                    
                 elif board[row][col] == '■':
+                    for key, value in fleet_pos.items(): #valuekon iterálni és megnézni a két egymást követő value egyezik e a row collal
+                        if value[0] == (row_shoot, col_shoot):
+                            print(value, "OK!")
                     if hit_checking_around_row(board, row, col):
                         board = hit_checking_around_row(board, row, col)[1]
                         print("Ship sunk!!!")
@@ -383,7 +395,8 @@ def battleship_main():
     display_board(player_1_board)
     player1, player2 = player_1_board, player_2_board
     counter = 50
-    player_1_board = placement_phase(player_1_board, size=5)
+    player_1_board = placement_phase(player_1_board, size=5)[0]
+    fleets_player1 = {"2 block long ship": ((0,0), (0, 1))}
     #player_2_board = placement_phase(player_2_board, size=5)
     # display_board(board)
     while counter != 0:
@@ -391,7 +404,8 @@ def battleship_main():
             #player1
             display_board(player_1_board)
             row, col = get_shoot()
-            player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
+            # player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
+            player_1_board = hit_function(player_1_board, row, col, fleets_player1)
             display_board(player_1_board)
             if has_won(player_1_board):
                 pass
