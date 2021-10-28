@@ -43,11 +43,11 @@ def menu():
     while True:
         option = input("Have fun!\n\n")
         if option == "1":
-                clear()
+                # clear()
                 # f = open("logo.txt", "r")
                 # print(f.read())
                 # time.sleep(3)
-                # clear()
+                clear()
                 break
         if option == "2":
                 sys.exit()
@@ -354,9 +354,19 @@ def has_won(board, size=5):
 def game_result(text, player):
     print(f'Congratulations, {player} is the winner!')
 
+def play_again():
+    while True:
+        again = ('Would you like to play agai?\nPlease choose Y or N: ')
+        if again == 'Y':
+            menu()
+        elif again == 'N':
+            sys.exit()
+        else:
+            print('Please choose Y or N!')
+            continue
+
 def game_logic(board):
     pass
-
 
 def battleship_main():
     menu()       
@@ -376,6 +386,7 @@ def battleship_main():
             row, col = get_shoot()
             # player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
             player_1_board = hit_function(player_1_board, row, col, fleets_player1)
+            display_board(player_1_board)
             if has_won(player_1_board):
                 pass
             # print player1 won
@@ -386,10 +397,9 @@ def battleship_main():
             row, col = get_shoot()
             player_2_board = hit_function(player_2_board, row, col, fleets_player2)
             hit_confirm(player_2_board, row, col)
-            if has_won(player_2_board):
-                pass
-            # print player1 won
-            #   play again() 
+            if has_won(player_2_board) == True:
+                game_result(text,player)
+                play_again()
         counter -= 1
 
     # print(Its a draw) play again()
