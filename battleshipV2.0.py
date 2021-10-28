@@ -43,10 +43,10 @@ def menu():
     while True:
         option = input("Have fun!\n\n")
         if option == "1":
-                # clear()
-                # f = open("logo.txt", "r")
-                # print(f.read())
-                # time.sleep(3)
+                clear()
+                f = open("logo.txt", "r")
+                print(f.read())
+                time.sleep(3)
                 clear()
                 break
         if option == "2":
@@ -55,14 +55,14 @@ def menu():
                 print("Please choose a number from the menu!\n\n")
                 continue
 
-size = 5
-def init_board(size):
+
+def init_board(size=5):
     board = [["0" for _ in range(size)] for _ in range(size)]
     return board
 
 
 def ask_for_fleets():
-    valid_moves = get_valid_moves()[2]
+    valid_moves = get_valid_moves(size=5)[2]
     while True:
         fleet_input = input("Please place your fleets: ")
         if fleet_input.upper() in valid_moves:
@@ -74,7 +74,7 @@ def ask_for_fleets():
 
 def ask_direction():
     while True:
-        direction = input("Horizontal or vertical? ")   # ide kell majd egy feltétel attól függően mekkore flottát tesz le
+        direction = input("Horizontal or vertical? ") 
         if direction.lower() == "h" or direction.lower() == "v":
             return direction.lower()
         else:
@@ -83,13 +83,14 @@ def ask_direction():
 
 
 def convert_input_to_coordinates(coord):
-    valid_numbers, valid_letters = get_valid_moves()[0], get_valid_moves()[1]
+    valid_numbers, valid_letters = get_valid_moves(size=5)[0], get_valid_moves(size=5)[1]
     row_index, col_index = coord[0], coord[1:]
     row = valid_letters.index(row_index)
     col = valid_numbers.index(col_index)
     return row, col
 
-#refactor
+
+
 def checking_valid_fleetplacing_row(board, row_check, col_check):
     table_size = len(board)
     for row in range(table_size):
@@ -144,10 +145,9 @@ def fillup_fleet_pos_dict(coordinates):
     for element in coordinates:
         fleets[count] = element
         count += 1
-    print(fleets)
     return fleets
 
-#refactorhoz
+
 def checking_direction_while_placing(board, direction, row, col):
     pass
 
@@ -166,8 +166,8 @@ def placing_2_block_long_ship(board, size, value):
                         board[row][col+1] = '■'
                         coordinates = [(row, col), (row, col+1)]
                         fleet_positions.append(coordinates)
+                        clear()
                         display_board(board)
-                        print(board, fleet_input, direction, row, col, fleet_positions)
                         value -= 1
                     else:
                         print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
@@ -186,8 +186,8 @@ def placing_2_block_long_ship(board, size, value):
                         board[row+1][col] = '■'
                         coordinates = [(row, col), (row+1, col)]
                         fleet_positions.append(coordinates)
+                        clear()
                         display_board(board)
-                        print(board, fleet_input, direction, row, col)
                         value -= 1
                     else:
                         print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
@@ -211,6 +211,7 @@ def placing_1_block_long_ship(board, value):
         else:
             if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row, col):
                 board[row][col] = '■'
+                clear()
                 display_board(board)
                 value -= 1
             else:
@@ -219,7 +220,7 @@ def placing_1_block_long_ship(board, value):
     return board
 
 
-def placement_phase(board, size):
+def placement_phase(board, size=5):
     if size == 5:
         fleets = {"2 block long ship": 2, "1 block long ship": 2}
         placing_status = 'placing fleets'
@@ -230,7 +231,6 @@ def placement_phase(board, size):
                 board, fleet_positions = placing_2_block_long_ship(board, size, value)
             if key == "1 block long ship":
                 board = placing_1_block_long_ship(board, value)
-        print(fleet_positions)
         placing_status = 'exit'
     
     return board, fleet_positions             
@@ -254,10 +254,20 @@ def display_board(board):
     print('')
 
 
+def board_value_converter(fleet_board, hidden_board):
+    board_lenght = len(fleet_board)
+    for row in range(board_lenght):
+        for col in range(board_lenght):
+            if fleet_board[row][col] != '■':
+                hidden_board[row][col] = fleet_board[row][col]
+    return hidden_board
+
+
 def display_hidden_board(board1, board2):
+    board_lenght = len(board1)
     abc_letters_up = string.ascii_uppercase
     print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
-    for i in range(len(board1)):
+    for i in range(board_lenght):
         print(f"{abc_letters_up[i]} {board1[i][0]} {board1[i][1]} "
               f"{board1[i][2]} {board1[i][3]} {board1[i][4]}"
               f"\t\t\t\t{abc_letters_up[i]} {board2[i][0]} "
@@ -285,16 +295,16 @@ def get_valid_moves(size=5):
 
 
 def get_player(player):
-    if player == "player1":
-        player = "player2"
+    if player == "Player1":
+        player = "Player2"
     else:
-        player = "player1"
-    return player
+        player = "Player1"
+    return player 
 
 
 def get_shoot():
     """Asks for user input for the shot until the input is valid."""
-    valid_moves = get_valid_moves()[2]
+    valid_moves = get_valid_moves(size=5)[2]
     while True:
         move = input("Give a coordinate:").upper()
         if move[0].isalpha() and move[1].isnumeric():
@@ -303,8 +313,10 @@ def get_shoot():
                     row, col = convert_input_to_coordinates(move)
                     return row, col
                 print('Given coordinates are out of field')
+            else:
+                print("Invalid input")
+        else:
             print("Invalid input")
-        print("Invalid input")
 
 
 def hit_checking_around_row(board, row, col):
@@ -366,8 +378,7 @@ def has_won(board, size=5):
     if size == 5:
         if count_s_element == 6:
             return True
-        else:
-            return False
+    return False
 
 
 def game_result(player):
@@ -376,9 +387,9 @@ def game_result(player):
 
 def play_again():
     while True:
-        again = ('Would you like to play agai?\nPlease choose Y or N: ')
+        again = input('Would you like to play again?\nPlease choose Y or N: ').upper()
         if again == 'Y':
-            menu()
+            battleship_main()
         elif again == 'N':
             sys.exit()
         else:
@@ -386,46 +397,59 @@ def play_again():
             continue
 
 
-def game_logic(board):
+def play_sequence():    
+    sequence = 0
+    for sequence in range (100):
+        if sequence % 2 == 0:
+            hit_function("player1",sequence)            
+        else:    
+            get_shoot("player2",sequence)
     pass
 
 
 def battleship_main():
     menu()       
-    player_1_board, player_2_board = init_board(size=5), init_board(size=5)
-    display_board(player_1_board)
-    hidden_board_1, hidden_board_2 = init_board(size=5), init_board(size=5)
+    player_1_board, player_2_board = init_board(), init_board()
+    hidden_board_1, hidden_board_2 = init_board(), init_board()
     counter = 50
-    player_1_board, fleets_player1 = placement_phase(player_1_board, size=5)
-    #player_2_board, fleets_player2 = placement_phase(player_2_board, size=5)
-    #player_2_board = placement_phase(player_2_board, size=5)
-    # display_board(board)
-    player1, player2 = "Player1", "Player2"
+    clear()
+    display_board(player_1_board)
+    player_1_board, fleets_player1 = placement_phase(player_1_board)
+    clear()
+    display_board(player_2_board)
+    player_2_board, fleets_player2 = placement_phase(player_2_board)
+    p_1_turn = counter//2
+    p_2_turn = counter//2
+    player = 'Player2'
     while counter != 0:
-        if counter % 2 == 0:
-            #player1
-            display_hidden_board(hidden_board_1, hidden_board_2)
+        clear()
+        converted_h_board1 = board_value_converter(player_1_board, hidden_board_1)
+        converted_h_board2 = board_value_converter(player_2_board, hidden_board_2)
+        player = get_player(player)
+        if player == 'Player1':
+            print(f"\t\t{player}'s turn\n\t\t{p_1_turn} turn(s) left ")
+            display_hidden_board(converted_h_board1, converted_h_board2)
             row, col = get_shoot()
-            # player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
-            player_1_board = hit_function(player_1_board, row, col, fleets_player1)
-            display_board(player_1_board)
-            if has_won(player_1_board):
-                game_result(player1)
+            player_2_board = hit_function(player_2_board, row, col, fleets_player1)
+            time.sleep(2)
+            if has_won(player_2_board):
+                game_result(player)
                 play_again()
+            p_1_turn -= 1
         else:
-            #player2
-            #display_hidden_board(player_1_board, player_2_board)
-            #row, col = get_shoot()
-            #player_2_board = hit_function_version_404(player_2_board, row, col, fleets_player2)
-            if has_won(player_2_board) == True:
-                game_result(player2)
+            print(f"\t\t{player}'s turn\n\t\t{p_2_turn} turn(s) left ")
+            display_hidden_board(converted_h_board1, converted_h_board2)
+            row, col = get_shoot()
+            player_1_board = hit_function(player_1_board, row, col, fleets_player2)
+            time.sleep(2)
+            if has_won(player_1_board):
+                game_result(player)
                 play_again()
+            p_2_turn -= 1
         counter -= 1
+    print("It's a draw!")
+    play_again()
 
-    # print(Its a draw) play again()
-    
-
-    # game_logic(player_1_board, player_2_board)
 
 if __name__ == "__main__":
     battleship_main()
