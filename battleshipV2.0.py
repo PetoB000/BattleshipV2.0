@@ -6,7 +6,9 @@ import copy
 
 
 def clear():
-    os.system("clear")
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def menu():
     clear()
     print("""
@@ -229,14 +231,6 @@ def placement_phase(board, size):
 
 
 def display_board(board):
-    # abc_letters_up = string.ascii_uppercase
-    # print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
-    # for row in range(len(board1)):
-    #     for col in range(1):
-    #         print(f"{abc_letters_up[i]} {board1[row][col]} {board2[row][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]}"
-    #               f"\t\t\t\t{abc_letters_up[i]} {board[i][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]} {board[i][col]}")
     abc_letters_up = string.ascii_uppercase
     for number in range(len(board)):
         if number == 0:
@@ -295,40 +289,6 @@ def get_shoot():
                 print('Given coordinates are out of field')
             print("Invalid input")
         print("Invalid input")
-
-
-def hit_confirm(board, row, col):
-    if board[row][col] == '0':
-        board[row][col] = 'M'
-        return board
-    elif board[row][col] == '■' and board[row][col+1] == 'H':
-        board[row][col], board[row][col+1] = 'S', 'S'
-        return board
-    elif board[row][col] == '■' and board[row][col-1] == 'H':
-        board[row][col], board[row][col-1] = 'S', 'S'
-        return board
-    elif board[row][col] == '■' and board[row+1][col] == 'H':
-        board[row][col], board[row+1][col] = 'S', 'S'
-        return board
-    elif board[row][col] == '■' and board[row-1][col] == 'H':
-        board[row][col], board[row-1][col] = 'S', 'S'
-        return board
-    elif board[row][col] == '■' and board[row][col+1] == '■' or \
-        board[row][col] == '■' and board[row][col-1] == '■' or \
-        board[row+1][col] == '■' and board[row][col] == '■' or \
-        board[row-1][col] == '■' and board[row][col] == '■':
-        board[row][col] = 'H'
-        return board
-    elif board[row][col] == '■' and board[row][col+1] == '0' or \
-            board[row][col] == '■' and board[row][col+1] == 'M'or \
-            board[row][col] == '■' and board[row][col-1] == '0' or \
-            board[row][col] == '■' and board[row][col-1] == 'M' or \
-            board[row][col] == '■' and board[row+1][col] == '0' or \
-            board[row][col] == '■' and board[row+1][col] == 'M' or \
-            board[row][col] == '■' and board[row-1][col] == '0' or \
-            board[row][col] == '■' and board[row-1][col] == 'M':
-        board[row][col] = 'S'
-        return board
 
 
 def hit_checking_around_row(board, row, col):
