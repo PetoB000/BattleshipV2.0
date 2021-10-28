@@ -231,28 +231,31 @@ def placement_phase(board, size):
 
 
 def display_board(board):
-    # abc_letters_up = string.ascii_uppercase
-    # print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
-    # for row in range(len(board1)):
-    #     for col in range(1):
-    #         print(f"{abc_letters_up[i]} {board1[row][col]} {board2[row][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]}"
-    #               f"\t\t\t\t{abc_letters_up[i]} {board[i][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]} {board[i][col]}")
     abc_letters_up = string.ascii_uppercase
-    for number in range(2*len(board1)):
+    for number in range(len(board)):
         if number == 0:
-            print('  ' + str(number+1), end=' ')
-        elif number > 0 and number <len(board1):
-            print(str(number+1), end = ' ')
+            print('  ' + str(number+1), end = ' ')
         else:
-            print('\t\t' + '  ' + '1' if number == len(board1) else str((number+1)-len(board1)), end = ' ')
+            print(str(number+1), end = ' ')
+    print('')
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if col == 0:
+                print(abc_letters_up[row]+ ' '+board[row][col], end=' ')
+            else:
+                print(board[row][col], end=' ')
+        print('')
     print('')
 
+
+def display_hidden_board(board1, board2):
+    abc_letters_up = string.ascii_uppercase
+    print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
     for i in range(len(board1)):
-        for col in range(1):
-            print(abc_letters_up[i] + ' ' + ' '.join(board1[i][col+i]* len(board1)) + "\t\t" + abc_letters_up[i] + ' ' + ' '.join(board2[i][col+i]*len(board1)), end=' ')
-            print('')
+        print(f"{abc_letters_up[i]} {board1[i][0]} {board1[i][1]} "
+              f"{board1[i][2]} {board1[i][3]} {board1[i][4]}"
+              f"\t\t\t\t{abc_letters_up[i]} {board2[i][0]} "
+              f"{board2[i][1]} {board2[i][2]} {board2[i][3]} {board2[i][4]}")
 
 def get_valid_moves(size=5):
     abc_letters = string.ascii_uppercase
@@ -359,28 +362,29 @@ def battleship_main():
     menu()       
     player_1_board, player_2_board = init_board(size=5), init_board(size=5)
     display_board(player_1_board)
-    player1, player2 = player_1_board, player_2_board
+    hidden_board_1, hidden_board_2 = init_board(size=5), init_board(size=5)
     counter = 50
-    player_1_board = placement_phase(player_1_board, size=5)[0]
+    player_1_board = placement_phase(player_1_board, size=5)
+    player_2_board = placement_phase(player_2_board, size=5)
     fleets_player1 = {"2 block long ship": ((0,0), (0, 1))}
     #player_2_board = placement_phase(player_2_board, size=5)
     # display_board(board)
     while counter != 0:
         if counter % 2 == 0:
             #player1
-            display_board(player_1_board)
+            display_hidden_board(hidden_board_1, hidden_board_2)
             row, col = get_shoot()
             # player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
             player_1_board = hit_function(player_1_board, row, col, fleets_player1)
-            display_board(player_1_board)
             if has_won(player_1_board):
                 pass
             # print player1 won
             #   play again() 
         else:
             #player2
-            display_board(player_2_board)
+            display_hidden_board(player_1_board, player_2_board)
             row, col = get_shoot()
+            player_2_board = hit_function(player_2_board, row, col, fleets_player2)
             hit_confirm(player_2_board, row, col)
             if has_won(player_2_board):
                 pass
@@ -391,7 +395,7 @@ def battleship_main():
     # print(Its a draw) play again()
     
 
-    # game_logic(player_1_board, player_2_board)                               
+    # game_logic(player_1_board, player_2_board)
 
 if __name__ == "__main__":
     battleship_main()
