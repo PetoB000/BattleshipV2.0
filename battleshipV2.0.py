@@ -136,7 +136,7 @@ def checking_valid_fleetplacing_col(board, row_check, col_check):
                     return True
 
 
-def placing_2_block_long_ship(board, size, value):
+def placing_2_block_long_ship(board, size, value, fleet_positions):
     while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
@@ -144,11 +144,19 @@ def placing_2_block_long_ship(board, size, value):
         if direction == "h":
             if col < size - 1:
                 if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row, col):
+                    if checking_valid_fleetplacing_row(board, row, col+1) and checking_valid_fleetplacing_col(board, row, col+1):
                         board[row][col] = '■'
                         board[row][col+1] = '■'
+                        key, val = 2, ((row, col), (row, col+1))
+                        dict_update = {key: val}
+                        fleet_positions.update(dict_update)
+                        print(fleet_positions)
                         display_board(board)
                         print(board, fleet_input, direction, row, col)
                         value -= 1
+                    else:
+                        print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
+                        continue
                 else:
                     print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
                     continue
@@ -158,11 +166,15 @@ def placing_2_block_long_ship(board, size, value):
         if direction == "v":
             if row < size -1:
                 if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row, col):
-                    board[row][col] = '■'
-                    board[row+1][col] = '■'
-                    display_board(board)
-                    print(board, fleet_input, direction, row, col)
-                    value -= 1
+                    if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row+1, col):
+                        board[row][col] = '■'
+                        board[row+1][col] = '■'
+                        display_board(board)
+                        print(board, fleet_input, direction, row, col)
+                        value -= 1
+                    else:
+                        print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
+                        continue                         
                 else:
                     print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
                     continue                    
@@ -172,7 +184,7 @@ def placing_2_block_long_ship(board, size, value):
     return board
 
 
-def placing_1_block_long_ship(board, value):
+def placing_1_block_long_ship(board, value, fleet_positions):
     while value != 0:                          
         fleet_input = ask_for_fleets()
         row, col = convert_input_to_coordinates(fleet_input)
@@ -193,15 +205,17 @@ def placing_1_block_long_ship(board, value):
 def placement_phase(board, size):
     if size == 5:
         fleets = {"2 block long ship": 2, "1 block long ship": 2}
+        fleet_positions = {}
         placing_status = 'placing fleets'
 
     while placing_status == 'placing fleets':
         for key, value in fleets.items():
             if key == "2 block long ship":
-                board = placing_2_block_long_ship(board, size, value)
+                board = placing_2_block_long_ship(board, size, value, fleet_positions)
             if key == "1 block long ship":
-                board = placing_1_block_long_ship(board, value)
+                board = placing_1_block_long_ship(board, value, fleet_positions)
         placing_status = 'exit'
+    
     return board             
 
 
@@ -279,16 +293,16 @@ def hit_confirm(board, row, col):
         board[row][col] = 'M'
         return board
     elif board[row][col] == '■' and board[row][col+1] == 'H':
-        board[row][col], board[row][col+1] = 'S'
+        board[row][col], board[row][col+1] = 'S', 'S'
         return board
     elif board[row][col] == '■' and board[row][col-1] == 'H':
-        board[row][col], board[row][col-1] = 'S'
+        board[row][col], board[row][col-1] = 'S', 'S'
         return board
     elif board[row][col] == '■' and board[row+1][col] == 'H':
-        board[row][col], board[row+1][col] = 'S'
+        board[row][col], board[row+1][col] = 'S', 'S'
         return board
     elif board[row][col] == '■' and board[row-1][col] == 'H':
-        board[row][col], board[row-1][col] = 'S'
+        board[row][col], board[row-1][col] = 'S', 'S'
         return board
     elif board[row][col] == '■' and board[row][col+1] == '■' or \
         board[row][col] == '■' and board[row][col-1] == '■' or \
@@ -306,6 +320,43 @@ def hit_confirm(board, row, col):
             board[row][col] == '■' and board[row-1][col] == 'M':
         board[row][col] = 'S'
         return board
+
+
+def hit_checking_around_row(board, row, col):
+    table_size = len(board)
+    if row < 1:
+        if board[row+1][col] != '■':
+            if board[row+1][col] == 'H':
+                board[row][col] = 'S'
+                board[row+1][col] = 'S'
+                return True, board
+        elif board[row+1][col] == '■':
+            pass
+    elif row >= 1 and row < table_size - 1:
+        pass
+
+
+def hit_function(board, row_shoot, col_shoot):
+    # if board[row_shoot][col_shoot] != 
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if row == row_shoot and col == col_shoot:
+                if board[row][col] == '0':
+                    print("It's a MISS!!")
+                    board[row][col] = 'M'
+                    return board
+                elif board[row][col] == 'M' or board[row][col] == 'S':
+                    print("Too bad.. You have already shooted this field.. It's a MISS again!!")
+                    return board                    
+                elif board[row][col] == '■':
+                    if hit_checking_around_row(board, row, col):
+                        board = hit_checking_around_row(board, row, col)[1]
+                        print("Ship sunk!!!")
+                        return board                        
+                    board[row][col] = "H"
+                    print("It's a hit!!!")
+                    return board                    
+                    
 
 def has_won(board, size=5):
     count_s_element = 0
@@ -340,7 +391,8 @@ def battleship_main():
             #player1
             display_board(player_1_board)
             row, col = get_shoot()
-            hit_confirm(player_1_board, row, col)
+            player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
+            display_board(player_1_board)
             if has_won(player_1_board):
                 pass
             # print player1 won
