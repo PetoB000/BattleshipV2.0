@@ -87,7 +87,7 @@ def convert_input_to_coordinates(coord):
     col = valid_numbers.index(col_index)
     return row, col
 
-
+#refactor
 def checking_valid_fleetplacing_row(board, row_check, col_check):
     table_size = len(board)
     for row in range(table_size):
@@ -110,6 +110,7 @@ def checking_valid_fleetplacing_row(board, row_check, col_check):
                     if board[row-1][col] == '■':
                         return False
                     return True
+
 
 def checking_valid_fleetplacing_col(board, row_check, col_check):
     table_size = len(board) 
@@ -139,7 +140,6 @@ def placing_2_block_long_ship(board, size, value):
     while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
-        #checker?
         row, col = convert_input_to_coordinates(fleet_input)
         if direction == "h":
             if col < size - 1:
@@ -157,11 +157,15 @@ def placing_2_block_long_ship(board, size, value):
                 continue
         if direction == "v":
             if row < size -1:
-                board[row][col] = '■'
-                board[row+1][col] = '■'
-                display_board(board)
-                print(board, fleet_input, direction, row, col)
-                value -= 1
+                if checking_valid_fleetplacing_row(board, row, col) and checking_valid_fleetplacing_col(board, row, col):
+                    board[row][col] = '■'
+                    board[row+1][col] = '■'
+                    display_board(board)
+                    print(board, fleet_input, direction, row, col)
+                    value -= 1
+                else:
+                    print("Invalid placement, you can not place your fleet next to yours another one, pls try again!")
+                    continue                    
             else:
                 print("Invalid placement, pls try again!")
                 continue
@@ -204,9 +208,9 @@ def placement_phase(board, size):
 def display_board(board):
     # abc_letters_up = string.ascii_uppercase
     # print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
-    # for i in range(len(board)):
+    # for row in range(len(board1)):
     #     for col in range(1):
-    #         print(f"{abc_letters_up[i]} {board[i][col]} {board[i][col]} "
+    #         print(f"{abc_letters_up[i]} {board1[row][col]} {board2[row][col]} "
     #               f"{board[i][col]} {board[i][col]} {board[i][col]}"
     #               f"\t\t\t\t{abc_letters_up[i]} {board[i][col]} "
     #               f"{board[i][col]} {board[i][col]} {board[i][col]} {board[i][col]}")
