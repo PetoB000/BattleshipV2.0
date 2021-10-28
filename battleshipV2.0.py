@@ -228,31 +228,21 @@ def placement_phase(board, size):
     return board, fleet_positions             
 
 
-def display_board(board):
-    # abc_letters_up = string.ascii_uppercase
-    # print("  1 2 3 4 5\t\t\t\t  1 2 3 4 5")
-    # for row in range(len(board1)):
-    #     for col in range(1):
-    #         print(f"{abc_letters_up[i]} {board1[row][col]} {board2[row][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]}"
-    #               f"\t\t\t\t{abc_letters_up[i]} {board[i][col]} "
-    #               f"{board[i][col]} {board[i][col]} {board[i][col]} {board[i][col]}")
+def display_board(board1, board2):
     abc_letters_up = string.ascii_uppercase
-    for number in range(len(board)):
+    for number in range(2*len(board1)):
         if number == 0:
-            print('  ' + str(number+1), end = ' ')
-        else:
+            print('  ' + str(number+1), end=' ')
+        elif number > 0 and number <len(board1):
             print(str(number+1), end = ' ')
+        else:
+            print('\t\t' + '  ' + '1' if number == len(board1) else str((number+1)-len(board1)), end = ' ')
     print('')
-    for row in range(len(board)):
-        for col in range(len(board)):
-            if col == 0:
-                print(abc_letters_up[row]+ ' '+board[row][col], end=' ')
-            else:
-                print(board[row][col], end=' ')
-        print('')
-    print('')
-    
+
+    for i in range(len(board1)):
+        for col in range(1):
+            print(abc_letters_up[i] + ' ' + ' '.join(board1[i][col+i]* len(board1)) + "\t\t" + abc_letters_up[i] + ' ' + ' '.join(board2[i][col+i]*len(board1)), end=' ')
+            print('')
 
 def get_valid_moves(size=5):
     abc_letters = string.ascii_uppercase
