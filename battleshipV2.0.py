@@ -266,10 +266,16 @@ def get_valid_moves(size=5):
 
 def get_player(player):
     if player == "player1":
-        player = "player2"
+        board == player_2_board
+        display_board == player_2_display_board
+    else player == "player2":
+        board == player_1_board
+        display_board == player_1_display_board
+    while next_shot == True:
+        print(f"Now {player}")
     else:
         player = "player1"
-    return player
+    return player 
 
 
 def get_shoot():
@@ -372,19 +378,28 @@ def has_won(board, size=5):
         else:
             return False
 
-def game_result(text, player):
+def game_result(player):
     print(f'Congratulations, {player} is the winner!')
 
 def play_again():
     while True:
         again = ('Would you like to play agai?\nPlease choose Y or N: ')
         if again == 'Y':
-            menu()
+            battleship_main()
         elif again == 'N':
             sys.exit()
         else:
             print('Please choose Y or N!')
             continue
+
+def play_sequence():    
+    two_boards(player_1_display_board, player_2_display_board)
+    sequence = 0
+    for sequence in range (100):
+        if sequence % 2 == 0:
+            hit_function("player1",sequence)            
+        else:    
+            get_shoot("player2",sequence)
 
 def game_logic(board):
     pass
@@ -405,16 +420,16 @@ def battleship_main():
             display_board(player_1_board)
             row, col = get_shoot()
             hit_confirm(player_1_board, row, col)
-            if has_won(player_1_board) == True:
-                game_result(text,player)
+            if has_won(player_1_board):
+                game_result(player)
                 play_again()
         else:
             #player2
             display_board(player_2_board)
             row, col = get_shoot()
             hit_confirm(player_2_board, row, col)
-            if has_won(player_2_board) == True:
-                game_result(text,player)
+            if has_won(player_2_board):
+                game_result(player)
                 play_again()
         counter -= 1
 
