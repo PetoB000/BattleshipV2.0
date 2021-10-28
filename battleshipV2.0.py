@@ -138,14 +138,22 @@ def checking_valid_fleetplacing_col(board, row_check, col_check):
                     return True
 
 
-def fillup_fleet_pos_dict(coordinates, fleets):
+def fillup_fleet_pos_dict(coordinates):
+    fleets = {}
+    count = 1
     for element in coordinates:
-        fleets["2 block long ship"].append(element)
+        fleets[count] = element
+        count += 1
     print(fleets)
     return fleets
-    
 
-def placing_2_block_long_ship(board, size, value, fleets):
+#refactorhoz
+def checking_direction_while_placing(board, direction, row, col):
+    pass
+
+
+def placing_2_block_long_ship(board, size, value):
+    fleet_positions = []
     while value != 0:                          
         fleet_input = ask_for_fleets()
         direction = ask_direction()
@@ -157,7 +165,7 @@ def placing_2_block_long_ship(board, size, value, fleets):
                         board[row][col] = '■'
                         board[row][col+1] = '■'
                         coordinates = [(row, col), (row, col+1)]
-                        fleet_positions = fillup_fleet_pos_dict(coordinates, fleets)
+                        fleet_positions.append(coordinates)
                         display_board(board)
                         print(board, fleet_input, direction, row, col, fleet_positions)
                         value -= 1
@@ -177,7 +185,7 @@ def placing_2_block_long_ship(board, size, value, fleets):
                         board[row][col] = '■'
                         board[row+1][col] = '■'
                         coordinates = [(row, col), (row+1, col)]
-                        fleet_positions = fillup_fleet_pos_dict(coordinates, fleets)
+                        fleet_positions.append(coordinates)
                         display_board(board)
                         print(board, fleet_input, direction, row, col)
                         value -= 1
@@ -214,15 +222,15 @@ def placing_1_block_long_ship(board, value):
 def placement_phase(board, size):
     if size == 5:
         fleets = {"2 block long ship": 2, "1 block long ship": 2}
-        fleet_positions = {"2 block long ship": []}
         placing_status = 'placing fleets'
 
     while placing_status == 'placing fleets':
         for key, value in fleets.items():
             if key == "2 block long ship":
-                board, fleet_positions = placing_2_block_long_ship(board, size, value, fleet_positions)
+                board, fleet_positions = placing_2_block_long_ship(board, size, value)
             if key == "1 block long ship":
                 board = placing_1_block_long_ship(board, value)
+        print(fleet_positions)
         placing_status = 'exit'
     
     return board, fleet_positions             
@@ -254,6 +262,7 @@ def display_hidden_board(board1, board2):
               f"{board1[i][2]} {board1[i][3]} {board1[i][4]}"
               f"\t\t\t\t{abc_letters_up[i]} {board2[i][0]} "
               f"{board2[i][1]} {board2[i][2]} {board2[i][3]} {board2[i][4]}")
+
 
 def get_valid_moves(size=5):
     abc_letters = string.ascii_uppercase
@@ -312,9 +321,8 @@ def hit_checking_around_row(board, row, col):
         pass
 
 
-def hit_function_version_404(board, row_shoot, col_shoot, fleet_pos):
-    # if board[row_shoot][col_shoot] != 
-    for row in range(len(board)):
+def hit_function(board, row_shoot, col_shoot, fleet_pos):
+    for row in range(len(board)):   # nem biztos hogy kell a dupla for ciklus?
         for col in range(len(board)):
             if row == row_shoot and col == col_shoot:
                 if board[row][col] == '0':
@@ -325,51 +333,29 @@ def hit_function_version_404(board, row_shoot, col_shoot, fleet_pos):
                     print("Too bad.. You have already shooted this field.. It's a MISS again!!")
                     return board                    
                 elif board[row][col] == '■':
-                    for value in fleet_pos.values(): #valuekon iterálni és megnézni a két egymást követő value egyezik e a row collal
-                        for item in range(len(value)):
-                            if item < len(value) - 1:
-                                if value[item] == (row, col) and value[item+1] == (row+1, col):
-                                    print("OK1!")
-                                    if board[row+1][col] == 'H':
-                                        print("It's a hit!!!\nShip sunk!!!")
-                                        board[row][col], board[row+1][col] = 'S', 'S'
-                                        return board
+                    for item in fleet_pos:
+                        for element in item:
+                            hit_list = []
+                            hit_list = item.copy()
+                            #hit_list.append(item)
+                            print(hit_list, item, element)
+                            if element == (row, col):
+                                hit_list.remove(element)
+                                row_check, col_check = hit_list[0][0], hit_list[0][1]
+                                print(row_check, col_check)
+                                if board[row_check][col_check] == '■':   #hit 2 blocks ship
                                     print("It's a hit!!!")
-                                    board[row][col] = "H"
+                                    board[row][col] = 'H'
                                     return board
-                                elif value[item] == (row, col) and value[item+1] == (row, col+1):
-                                    print("OK2!")
-                                    if board[row][col+1] == 'H':
-                                        print("It's a hit!!!\nShip sunk!!!")
-                                        board[row][col], board[row][col+1] = 'S', 'S'
-                                        return board
-                                    print("It's a hit!!!")
-                                    board[row][col] = "H"
-                                    return board                                    
-                            elif item > 0:
-                                if value[item] == (row, col) and value[item-1] == (row-1, col):
-                                    print("OK3!")
-                                    if board[row+1][col] == 'H':
-                                        print("It's a hit!!!\nShip sunk!!!")
-                                        board[row][col], board[row+1][col] = 'S', 'S'
-                                        return board
-                                    print("It's a hit!!!")
-                                    board[row][col] = "H"
-                                    return board                                        
-                                elif value[item] == (row, col) and value[item-1] == (row, col-1):
-                                    print("OK4!")
-                                    if board[row][col+1] == 'H':
-                                        print("It's a hit!!!\nShip sunk!!!")
-                                        board[row][col], board[row][col+1] = 'S', 'S'
-                                        return board
-                                    print("It's a hit!!!")
-                                    board[row][col] = "H"
-                                    return board                                                                            
-                    print("It's a hit!!! One block ship?")
-                    board[row][col] = "H"
+                                elif board[row_check][col_check] == 'H':
+                                    print("It's a hit!!!\nShip sunk!!!")
+                                    board[row][col], board[row_check][col_check] = 'S', 'S'
+                                    return board
+                            hit_list = []
+                    print("It's a hit!!!\nShip sunk!!!")  # hit one block ship
+                    board[row][col] = 'S'
                     return board
-                                   
-                    
+                                               
 
 def has_won(board, size=5):
     count_s_element = 0
@@ -383,8 +369,10 @@ def has_won(board, size=5):
         else:
             return False
 
+
 def game_result(player):
     print(f'Congratulations, {player} is the winner!')
+
 
 def play_again():
     while True:
@@ -401,6 +389,7 @@ def play_again():
 def game_logic(board):
     pass
 
+
 def battleship_main():
     menu()       
     player_1_board, player_2_board = init_board(size=5), init_board(size=5)
@@ -408,8 +397,7 @@ def battleship_main():
     hidden_board_1, hidden_board_2 = init_board(size=5), init_board(size=5)
     counter = 50
     player_1_board, fleets_player1 = placement_phase(player_1_board, size=5)
-    player_2_board, fleets_player2 = placement_phase(player_2_board, size=5)
-    fleets_player1 = {"2 block long ship": ((0,0), (0, 1))}
+    #player_2_board, fleets_player2 = placement_phase(player_2_board, size=5)
     #player_2_board = placement_phase(player_2_board, size=5)
     # display_board(board)
     player1, player2 = "Player1", "Player2"
@@ -419,16 +407,16 @@ def battleship_main():
             display_hidden_board(hidden_board_1, hidden_board_2)
             row, col = get_shoot()
             # player_1_board = hit_confirm(player_1_board, row, col) # player2 board kell majd ide
-            player_1_board = hit_function_version_404(player_1_board, row, col, fleets_player1)
+            player_1_board = hit_function(player_1_board, row, col, fleets_player1)
             display_board(player_1_board)
             if has_won(player_1_board):
                 game_result(player1)
                 play_again()
         else:
             #player2
-            display_hidden_board(player_1_board, player_2_board)
-            row, col = get_shoot()
-            player_2_board = hit_function_version_404(player_2_board, row, col, fleets_player2)
+            #display_hidden_board(player_1_board, player_2_board)
+            #row, col = get_shoot()
+            #player_2_board = hit_function_version_404(player_2_board, row, col, fleets_player2)
             if has_won(player_2_board) == True:
                 game_result(player2)
                 play_again()
