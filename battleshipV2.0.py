@@ -333,40 +333,33 @@ def hit_checking_around_row(board, row, col):
         pass
 
 
-def hit_function(board, row_shoot, col_shoot, fleet_pos):
-    for row in range(len(board)):   # nem biztos hogy kell a dupla for ciklus?
-        for col in range(len(board)):
-            if row == row_shoot and col == col_shoot:
-                if board[row][col] == '0':
-                    print("It's a MISS!!")
-                    board[row][col] = 'M'
-                    return board
-                elif board[row][col] == 'M' or board[row][col] == 'S'or board[row][col] == 'H':
-                    print("Too bad.. You have already shooted this field.. It's a MISS again!!")
-                    return board                    
-                elif board[row][col] == '■':
-                    for item in fleet_pos:
-                        for element in item:
-                            hit_list = []
-                            hit_list = item.copy()
-                            #hit_list.append(item)
-                            print(hit_list, item, element)
-                            if element == (row, col):
-                                hit_list.remove(element)
-                                row_check, col_check = hit_list[0][0], hit_list[0][1]
-                                print(row_check, col_check)
-                                if board[row_check][col_check] == '■':   #hit 2 blocks ship
-                                    print("It's a hit!!!")
-                                    board[row][col] = 'H'
-                                    return board
-                                elif board[row_check][col_check] == 'H':
-                                    print("It's a hit!!!\nShip sunk!!!")
-                                    board[row][col], board[row_check][col_check] = 'S', 'S'
-                                    return board
-                            hit_list = []
-                    print("It's a hit!!!\nShip sunk!!!")  # hit one block ship
-                    board[row][col] = 'S'
-                    return board
+def hit_function(board, row, col, fleet_pos):
+    if board[row][col] == '0':
+        print("It's a MISS!!")
+        board[row][col] = 'M'
+        return board
+    elif board[row][col] == 'M' or board[row][col] == 'S'or board[row][col] == 'H':
+        print("Too bad.. You have already shooted this field.. It's a MISS again!!")
+        return board                    
+    elif board[row][col] == '■':
+        for item in fleet_pos:
+            for element in item:
+                hit_list = []
+                hit_list = item.copy()
+                if element == (row, col):
+                    hit_list.remove(element)
+                    row_check, col_check = hit_list[0][0], hit_list[0][1]
+                    if board[row_check][col_check] == '■':   #hit 2 blocks ship
+                        print("It's a hit!!!")
+                        board[row][col] = 'H'
+                        return board
+                    elif board[row_check][col_check] == 'H':
+                        print("It's a hit!!!\nShip sunk!!!")
+                        board[row][col], board[row_check][col_check] = 'S', 'S'
+                        return board
+        print("It's a hit!!!\nShip sunk!!!")  # hit one block ship
+        board[row][col] = 'S'
+        return board
                                                
 
 def has_won(board, size=5):
@@ -430,7 +423,7 @@ def battleship_main():
             print(f"\t\t{player}'s turn\n\t\t{p_1_turn} turn(s) left ")
             display_hidden_board(converted_h_board1, converted_h_board2)
             row, col = get_shoot()
-            player_2_board = hit_function(player_2_board, row, col, fleets_player1)
+            player_2_board = hit_function(player_2_board, row, col, fleets_player2)
             time.sleep(2)
             if has_won(player_2_board):
                 game_result(player)
@@ -440,7 +433,7 @@ def battleship_main():
             print(f"\t\t{player}'s turn\n\t\t{p_2_turn} turn(s) left ")
             display_hidden_board(converted_h_board1, converted_h_board2)
             row, col = get_shoot()
-            player_1_board = hit_function(player_1_board, row, col, fleets_player2)
+            player_1_board = hit_function(player_1_board, row, col, fleets_player1)
             time.sleep(2)
             if has_won(player_1_board):
                 game_result(player)
